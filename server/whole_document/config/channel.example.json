@@ -1,0 +1,23 @@
+{
+  "base_url": "https://provider.example/v1",
+  "model": "gpt-6.1-sol",
+  "api_key": "INJECT_LOCALLY",
+  "proxy_mode": "system",
+  "target_language": "zh-CN",
+  "context_limit": 0,
+  "output_limit": 0,
+  "capacity_verified": false,
+  "timeout_seconds": 600,
+  "max_request_tokens": 80000,
+  "max_task_tokens": 300000,
+  "max_requests": 6,
+  "repair_rounds": 2,
+  "repair_fraction": 0.2,
+  "strategy": "whole",
+  "glossary": {},
+  "preserve_terms": [],
+  "currency": "CNY",
+  "max_cost": 0.2,
+  "input_price_per_million": null,
+  "output_price_per_million": null
+}
