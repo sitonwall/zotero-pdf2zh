@@ -1,4 +1,4 @@
-> **sitonwall 维护的整篇翻译实验分支** · [安装与使用](server/whole_document/README.md) · [预发布版本](https://github.com/sitonwall/zotero-pdf2zh/releases/tag/v0.1.0-whole.1) · [功能 Draft PR](https://github.com/sitonwall/zotero-pdf2zh/pull/1) · [上游讨论 #369](https://github.com/guaguastandup/zotero-pdf2zh/issues/369)
+> **sitonwall 维护的整篇翻译实验分支** · [安装与使用](server/whole_document/README.md) · [预发布版本](https://github.com/sitonwall/zotero-pdf2zh/releases/tag/whole-document-v0.1.0) · [功能 Draft PR](https://github.com/sitonwall/zotero-pdf2zh/pull/1) · [上游讨论 #369](https://github.com/guaguastandup/zotero-pdf2zh/issues/369)
 >
 > 本分支新增独立的整篇上下文、局部修复和费用追踪服务，默认端口 8891；原插件和原服务入口保留。专用测试已在 Windows/Ubuntu CI 通过。它尚未通过作者语义验收和 Zotero 现场附件验收，不是上游正式版本。上游目前仅允许协作者创建 PR，因此功能提案以 issue + fork Draft PR 公开；独立排版修复已提交 [BabelDOC #629](https://github.com/funstory-ai/BabelDOC/pull/629)。[维护说明](docs/whole-document-maintenance.md)
 
