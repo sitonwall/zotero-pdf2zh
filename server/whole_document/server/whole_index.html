@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>全文翻译监控</title>
+<style>body{font:16px/1.6 system-ui;max-width:1040px;margin:48px auto;padding:0 24px;color:#26343c;background:#fafbf9}h1{font-size:28px}article{padding:20px 0;border-top:1px solid #cbd3cf}button,a{margin-right:16px;color:#126451}button{padding:6px 12px}small{color:#56666d}.partial,.failed{color:#a14024}pre{white-space:pre-wrap;font-size:13px}</style>
+<h1>全文翻译监控</h1><p id="health">正在连接服务…</p><p>从 Zotero 提交任务。打开或刷新本页仅查询状态，不触发翻译。</p><main id="tasks"></main>
+<script>
+const labels={complete:'完整成功',partial:'部分成功',failed:'失败',cancelled:'已取消',queued:'排队中',running:'处理中',interrupted:'已中断，需明确恢复'};
+function node(tag,text){const el=document.createElement(tag);el.textContent=text;return el}
+async function action(id,name){await fetch(`/api/v2/tasks/${id}/${name}`,{method:'POST'});await refresh()}
+async function refresh(){try{
+const health=await(await fetch('/health',{cache:'no-store'})).json();
+document.getElementById('health').textContent=`服务在线 · ${health.model} · ${health.configured?'模型配置就绪':'模型价格或容量尚待确认'}`;
+const data=await(await fetch('/api/v2/tasks',{cache:'no-store'})).json();const main=document.getElementById('tasks');main.replaceChildren();
+if(!data.tasks.length)main.append(node('p','暂无任务'));
+for(const t of data.tasks){const row=document.createElement('article');row.className=t.status;
+row.append(node('strong',`${t.fileName} · ${labels[t.status]||t.status}`));
+row.append(node('p',`阶段：${t.stage} · 耗时 ${t.elapsed_seconds||0} 秒${t.progress===100?' · 验收完成 100%':''}`));
+row.append(node('small',`请求 ${t.attempts||0} 次 · 已报告用量 ${t.usage?.total_tokens||0} token · 未知用量 ${t.usage?.unknown_attempts||0} 次（用量不等于供应商账单）`));
+if(t.status==='partial')row.append(node('p','以下为部分译文，存在未完成或待核查内容。'));
+for(const file of t.fileList||[]){const a=node('a',file);a.href='/translatedFile/'+encodeURIComponent(file);row.append(document.createElement('br'),a)}
+if(t.qa){const a=node('a','下载 QA 清单');a.href=`/api/v2/tasks/${t.taskId}/qa`;row.append(document.createElement('br'),a)}
+if(t.errors?.length||Object.keys(t.invalid||{}).length)row.append(node('pre',JSON.stringify({errors:t.errors,invalid:t.invalid},null,2)));
+const stopped=t.finished||t.status==='interrupted';const b=node('button',stopped?(t.can_resume?'明确恢复':'需通过命令行和原配置恢复'):'取消');b.disabled=stopped&&!t.can_resume;b.onclick=()=>action(t.taskId,stopped?'resume':'cancel');if(t.status!=='complete')row.append(document.createElement('br'),b);main.append(row)}
+}catch(e){document.getElementById('health').textContent='连接失败，请检查后台服务。'}}
+refresh();setInterval(refresh,2000);
+</script></html>
